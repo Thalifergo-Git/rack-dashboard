@@ -1,0 +1,7 @@
+- Docs:
+    - Homepage widgets:
+        - abbr: HP
+          href: https://gethomepage.dev/widgets/
+    - Glances API:
+        - abbr: GL
+          href: https://glances.readthedocs.io/

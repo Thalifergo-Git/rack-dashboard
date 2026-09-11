@@ -1,0 +1,23 @@
+# Run this on each MONITORED host that has Docker.
+#
+#   mkdir -p ~/rack-dashboard-agent && cd ~/rack-dashboard-agent
+#   curl -fsSLO https://raw.githubusercontent.com/<you>/rack-dashboard/main/agent/docker-compose.yml
+#   docker compose up -d
+#
+# Exposes a read-only REST API on :61208. NO AUTHENTICATION — keep it on your
+# LAN or VPN, never on the public internet.
+services:
+  glances:
+    image: nicolargo/glances:4.3.0.8-full
+    container_name: rd-glances
+    restart: unless-stopped
+    pid: host
+    network_mode: host
+    environment:
+      GLANCES_OPT: "-w --disable-webui"
+    volumes:
+      - /etc/os-release:/etc/os-release:ro
+      # Uncomment for container stats. NOTE: this socket is root-equivalent.
+      # Prefer a socket proxy if this host runs anything sensitive.
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+    mem_limit: 256m

@@ -1,0 +1,67 @@
+# Rack Dashboard — the dashboard host itself.
+#
+# network_mode: host on homepage is deliberate. Services that bind 127.0.0.1 on
+# this machine are unreachable from a bridge network, which silently breaks
+# every siteMonitor check and local widget.
+services:
+  dockerproxy:
+    image: tecnativa/docker-socket-proxy:v0.5.0
+    container_name: rd-dockerproxy
+    restart: unless-stopped
+    environment:
+      CONTAINERS: 1
+      SERVICES: 1
+      TASKS: 1
+      IMAGES: 1
+      NETWORKS: 1
+      VOLUMES: 1
+      INFO: 1
+      POST: 0          # no create / start / stop / exec
+      EXEC: 0
+      BUILD: 0
+      COMMIT: 0
+      CONFIGS: 0
+      SECRETS: 0
+      SWARM: 0
+      SYSTEM: 0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "127.0.0.1:2375:2375"   # loopback only, read-only API
+    mem_limit: 64m
+
+  homepage:
+    image: ghcr.io/gethomepage/homepage:v2.2.0
+    container_name: rd-homepage
+    restart: unless-stopped
+    network_mode: host
+    depends_on: [dockerproxy]
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: ${HOMEPAGE_ALLOWED_HOSTS:-localhost:3080,127.0.0.1:3080}
+      PORT: "3080"
+    volumes:
+      - ./config:/app/config
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3080/api/healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # The dashboard host monitors itself too.
+  glances:
+    image: nicolargo/glances:4.3.0.8-full
+    container_name: rd-glances
+    restart: unless-stopped
+    pid: host                  # see processes outside this container — the whole point
+    network_mode: host
+    environment:
+      GLANCES_OPT: "-w --disable-webui"
+      DOCKER_HOST: "tcp://127.0.0.1:2375"
+    volumes:
+      - /etc/os-release:/etc/os-release:ro
+    mem_limit: 256m

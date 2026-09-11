@@ -1,0 +1,5 @@
+# Read-only Docker API via the socket proxy on loopback.
+# Homepage never touches /var/run/docker.sock directly — it is root-equivalent.
+my-docker:
+  host: 127.0.0.1
+  port: 2375

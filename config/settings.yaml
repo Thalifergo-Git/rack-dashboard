@@ -1,0 +1,9 @@
+title: Rack Dashboard
+headerStyle: clean
+layout:
+  Performance:
+    style: row
+    columns: 3
+  Services:
+    style: row
+    columns: 4
