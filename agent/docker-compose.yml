@@ -1,7 +1,7 @@
 # Run this on each MONITORED host that has Docker.
 #
 #   mkdir -p ~/rack-dashboard-agent && cd ~/rack-dashboard-agent
-#   curl -fsSLO https://raw.githubusercontent.com/<you>/rack-dashboard/main/agent/docker-compose.yml
+#   curl -fsSLO https://raw.githubusercontent.com/Thalifergo-Git/rack-dashboard/main/agent/docker-compose.yml
 #   docker compose up -d
 #
 # Exposes a read-only REST API on :61208. NO AUTHENTICATION — keep it on your

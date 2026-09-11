@@ -3,7 +3,7 @@
 #
 #   sudo apt-get install -y glances
 #   sudo curl -fsSL -o /etc/systemd/system/glances-web.service \
-#        https://raw.githubusercontent.com/<you>/rack-dashboard/main/agent/glances-web.service
+#        https://raw.githubusercontent.com/Thalifergo-Git/rack-dashboard/main/agent/glances-web.service
 #   sudo systemctl daemon-reload && sudo systemctl enable --now glances-web
 #
 # Exposes a read-only REST API on :61208. NO AUTHENTICATION — LAN or VPN only.

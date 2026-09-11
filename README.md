@@ -57,7 +57,7 @@ Invisible to every exporter running at the time.
 ## Quickstart
 
 ```bash
-git clone https://github.com/<you>/rack-dashboard.git
+git clone https://github.com/Thalifergo-Git/rack-dashboard.git
 cd rack-dashboard
 ./setup.sh
 ```

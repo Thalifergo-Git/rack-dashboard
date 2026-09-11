@@ -119,14 +119,14 @@ if [ ${#AGENT_DOCKER[@]} -gt 0 ] || [ ${#AGENT_PKG[@]} -gt 0 ]; then
   if [ ${#AGENT_DOCKER[@]} -gt 0 ]; then
     printf '\n  With Docker — %s:\n' "$(IFS=, ; echo "${AGENT_DOCKER[*]}")"
     say "    mkdir -p ~/rack-dashboard-agent && cd ~/rack-dashboard-agent"
-    say "    curl -fsSLO https://raw.githubusercontent.com/OWNER/rack-dashboard/main/agent/docker-compose.yml"
+    say "    curl -fsSLO https://raw.githubusercontent.com/Thalifergo-Git/rack-dashboard/main/agent/docker-compose.yml"
     say "    docker compose up -d"
   fi
   if [ ${#AGENT_PKG[@]} -gt 0 ]; then
     printf '\n  Without Docker — %s:\n' "$(IFS=, ; echo "${AGENT_PKG[*]}")"
     say "    sudo apt-get install -y glances"
     say "    sudo curl -fsSL -o /etc/systemd/system/glances-web.service \\"
-    say "         https://raw.githubusercontent.com/OWNER/rack-dashboard/main/agent/glances-web.service"
+    say "         https://raw.githubusercontent.com/Thalifergo-Git/rack-dashboard/main/agent/glances-web.service"
     say "    sudo systemctl daemon-reload && sudo systemctl enable --now glances-web"
   fi
   printf '\n'

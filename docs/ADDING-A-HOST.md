@@ -8,7 +8,7 @@ Two steps: run the agent on the new machine, then add it to the dashboard.
 
 ```bash
 mkdir -p ~/rack-dashboard-agent && cd ~/rack-dashboard-agent
-curl -fsSLO https://raw.githubusercontent.com/OWNER/rack-dashboard/main/agent/docker-compose.yml
+curl -fsSLO https://raw.githubusercontent.com/Thalifergo-Git/rack-dashboard/main/agent/docker-compose.yml
 docker compose up -d
 ```
 
@@ -18,7 +18,7 @@ install Docker just for this:
 ```bash
 sudo apt-get install -y glances
 sudo curl -fsSL -o /etc/systemd/system/glances-web.service \
-     https://raw.githubusercontent.com/OWNER/rack-dashboard/main/agent/glances-web.service
+     https://raw.githubusercontent.com/Thalifergo-Git/rack-dashboard/main/agent/glances-web.service
 sudo systemctl daemon-reload && sudo systemctl enable --now glances-web
 ```
 
