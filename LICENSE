@@ -1,3 +1,19 @@
+Rack Dashboard — MIT Licence
+
+This licence covers ONLY the files in this repository: the compose files,
+setup.sh, the configuration templates and the documentation.
+
+It does NOT cover the software this project deploys, which is pulled as
+published container images at run time and remains under its own licence:
+
+  Homepage            GPL-3.0     github.com/gethomepage/homepage
+  Glances             LGPL-3.0    github.com/nicolargo/glances
+  docker-socket-proxy Apache-2.0  github.com/Tecnativa/docker-socket-proxy
+
+No upstream source code is included, redistributed or modified here.
+
+---
+
 MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

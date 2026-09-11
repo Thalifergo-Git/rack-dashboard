@@ -3,6 +3,10 @@
 **One pane of glass for a homelab rack** — every host's CPU, RAM, temperature and
 *which process is actually burning it*, plus your latest alerts, on a single page.
 
+*A multi-host configuration layer for [Homepage](https://github.com/gethomepage/homepage)
+and [Glances](https://github.com/nicolargo/glances). Not a fork — see
+[what this is](#what-this-is-and-what-it-is-not).*
+
 Built for the case where your machines don't agree with each other: a NAS appliance with
 its own dashboard, a Proxmox hypervisor with none, and a Pi running everything else. Each
 one shows you a slice. This shows you all of them.
@@ -23,6 +27,52 @@ one shows you a slice. This shows you all of them.
                     every host      (optional)
                     :61208
 ```
+
+## What this is, and what it is not
+
+**This is not a new dashboard, and it is not a fork.** It contains no upstream source code.
+It is a *configuration and deployment layer* that stands on three existing projects:
+
+| Project | Licence | What it does here |
+|---|---|---|
+| **[Homepage](https://github.com/gethomepage/homepage)** | GPL-3.0 | The dashboard itself. All rendering, widgets and the service catalogue. |
+| **[Glances](https://github.com/nicolargo/glances)** | LGPL-3.0 | The per-host agent. Supplies CPU, RAM, temperature and the process list. |
+| **[docker-socket-proxy](https://github.com/Tecnativa/docker-socket-proxy)** | Apache-2.0 | Read-only Docker API, so the dashboard never touches the raw socket. |
+
+All the credit for the hard parts belongs upstream. Homepage is doing the work you can see;
+this repo is the opinionated wiring around it. If you want the dashboard on its own, go
+straight to [gethomepage.dev](https://gethomepage.dev) — you do not need this project.
+
+### What this project actually adds
+
+The gap it fills is that Homepage, by default, describes **the machine it runs on**. A rack
+is several machines, and some of them — an appliance with its own walled-garden dashboard, a
+hypervisor with none — will never report into it on their own.
+
+1. **A multi-host Performance layer.** One `info` tile and one `process` tile per machine,
+   so the whole rack is on one page instead of one box being the star.
+2. **A process-level activity monitor.** The reason the project exists. `node-exporter` has
+   no per-process metrics and cAdvisor only sees containers, so anything running *outside* a
+   container is invisible to a normal metrics stack. This shows what is actually burning
+   each box, by process name.
+3. **Agents for hosts without Docker.** A systemd unit alongside the container, because a
+   Proxmox hypervisor should not have to install Docker just to be monitored.
+4. **An onboarding script.** `setup.sh` asks what is in your rack, generates the config, and
+   *prints* the commands for the other machines rather than reaching into them over SSH.
+5. **A latest-alerts strip.** Reads an existing Alertmanager if you have one, skipped if not.
+6. **Secret handling that survives being committed.** Config references
+   `{{HOMEPAGE_VAR_*}}` placeholders; values live in a gitignored `.env`.
+7. **Security defaults that are not the tutorial defaults.** No Docker socket mounted into
+   the dashboard, Glances serving its API with the human web UI disabled, and the warning
+   about port 61208 being unauthenticated stated where you will actually read it.
+
+### Licence scope
+
+The MIT licence in this repo covers **only the files in this repo** — the compose files,
+`setup.sh`, the config templates and the docs. Homepage, Glances and docker-socket-proxy are
+pulled as published images at run time and remain under their own licences above. Nothing
+here redistributes or modifies their code.
+
 
 ## Why not just Prometheus + Grafana?
 
