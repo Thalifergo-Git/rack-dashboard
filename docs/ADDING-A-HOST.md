@@ -63,10 +63,35 @@ Swap `metric:` for any of these — one widget each:
 | `process` | top processes by CPU — the activity monitor |
 | `cpu` / `memory` | that one resource, larger |
 | `sensors` | temperatures |
-| `fs:/mnt/tank` | free space on one filesystem |
+| `fs:/rootfs` | free space on the host's root — `/rootfs`, not `/`, on a Docker agent (see below) |
 | `network:eth0` | throughput on one interface |
 
 ## Troubleshooting
+
+**Temperature shows nothing, but the host clearly has sensors.** The dashboard matches sensor
+labels with a *prefix* list — `cpu_thermal`, `Core`, `Tctl`, `Temperature` — which covers
+Intel and AMD. ARM boards name theirs differently: a Rockchip board reports `soc_thermal 0`,
+`bigcore0_thermal 0`; a Raspberry Pi reports `cpu_thermal 0` (that one matches). Check what
+the agent actually reports, then add the prefix to the header widget:
+
+```bash
+curl -s http://HOST:61208/api/4/sensors | grep -o '"label":"[^"]*"'
+```
+
+```yaml
+- glances:
+    url: http://HOST:61208
+    version: 4
+    cputemp: true
+    cpuSensorLabel: soc_thermal     # the prefix your board uses
+```
+
+**Disk shows nothing on a host running the Docker agent.** A container only sees its own
+mount namespace. The agent compose bind-mounts the host root read-only at `/rootfs`, and the
+widget must be told that name — `disk: /rootfs` in the header, or `metric: fs:/rootfs` on a
+tile. `disk: /` names the container's own overlay and matches nothing. Hosts running the
+package agent see the real `/` and can use it directly.
+
 
 **A tile shows an error badge.** The agent is not reachable. From the dashboard host,
 `curl http://HOST:61208/api/4/cpu`. A timeout means a firewall or the agent is not running.
